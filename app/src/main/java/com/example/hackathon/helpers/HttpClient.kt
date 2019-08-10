@@ -37,6 +37,13 @@ open class HttpClient {
             executeRequest(request, activity, callback, loading)
         }
 
+        fun getCatFat(path : String, activity : Activity, loading: Boolean, callback : (err: Boolean, response : String) -> Unit) {
+            val request = Request.Builder()
+                .url(path)
+                .build()
+            executeRequest(request, activity, callback, loading)
+        }
+
         fun get(path : String, activity : Activity, loading: Boolean, callback : (err: Boolean, response : String) -> Unit) {
             val request = Request.Builder()
                     .header("Authorization", Utils.getSharedPreferencesStringValue(activity, "USER_TOKEN")!!)

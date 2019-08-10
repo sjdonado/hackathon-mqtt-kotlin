@@ -18,6 +18,9 @@
     <string name="fragment_sign_up_password">Password</string>
     <string name="fragment_sign_up_button">Send</string>
 
+    <!-- Home Fragment -->
+    <string name="fragment_home_generate_qr_button">Generate cat QR</string>
+
     <string name="fragment_sign_up_first_name_error">Empty first name</string>
     <string name="fragment_sign_up_last_name_error">Empty last name</string>
     <string name="fragment_sign_up_email_error">Empty email</string>
@@ -31,6 +34,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_scan">ScanActivity</string>
 
 
 </resources>
