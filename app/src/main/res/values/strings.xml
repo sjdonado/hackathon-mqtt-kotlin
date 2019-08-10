@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">Hackathon</string>
+    <!-- Login Fragment -->
+    <string name="fragment_login_header_title">Welcome!</string>
+    <string name="fragment_login_username">Email</string>
+    <string name="fragment_login_password">Password</string>
+    <string name="fragment_login_button">Login</string>
+    <string name="fragment_login_go_to_sign_up_button">Sign up</string>
+
+    <string name="fragment_login_username_error">Empty email</string>
+    <string name="fragment_login_password_error">Empty password</string>
+
+    <!-- SignUp Fragment -->
+    <string name="fragment_sign_up_header_title">Sign up</string>
+    <string name="fragment_sign_up_first_name">First name</string>
+    <string name="fragment_sign_up_last_name">Last name</string>
+    <string name="fragment_sign_up_email">Email</string>
+    <string name="fragment_sign_up_password">Password</string>
+    <string name="fragment_sign_up_button">Send</string>
+
+    <string name="fragment_sign_up_first_name_error">Empty first name</string>
+    <string name="fragment_sign_up_last_name_error">Empty last name</string>
+    <string name="fragment_sign_up_email_error">Empty email</string>
+    <string name="fragment_sign_up_password_error">Empty password</string>
+
+    <!-- Internet -->
+    <string name="internet_no_internet_connection">No Internet connection</string>
+    <string name="internet_server_error">Server Error</string>
+    <string name="internet_unknown_error">Unknown error</string>
+    <string name="internet_unknown_response">Unknown Response</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+</resources>

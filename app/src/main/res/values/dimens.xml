@@ -1,0 +1,18 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="toolbar_elevation">4dp</dimen>
+    <dimen name="card_view_default_indent">8dp</dimen>
+    <dimen name="card_view_login_margin">128dp</dimen>
+
+    <dimen name="login_header_title">20sp</dimen>
+    <dimen name="login_sub_title">12sp</dimen>
+
+    <dimen name="user_card_default_indent">16dp</dimen>
+
+    <dimen name="user_details_title">24sp</dimen>
+    <dimen name="user_details_section_title">12sp</dimen>
+    <dimen name="user_details_default_indent">16dp</dimen>
+</resources>
