@@ -21,7 +21,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="64dp"
         app:layout_constraintBottom_toTopOf="@id/text_view_qr_code_value"/>
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -31,7 +31,7 @@
         android:text="QR Code Value"
         android:textSize="18sp"
         android:gravity="center_horizontal"
-        android:layout_marginTop="16dp"
+        android:layout_marginBottom="64dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/frame_layout_camera"

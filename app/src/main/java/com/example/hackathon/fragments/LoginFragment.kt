@@ -53,7 +53,7 @@ class LoginFragment : Fragment() {
 
             HttpClient.login("/usuarios/login", activity!!, data.toString(), true) { err, res ->
                 activity!!.runOnUiThread {
-                    Utils.setSharedPreferencesStringValue(activity!!, Utils.USER_TOKEN, res)
+                    Utils.setSharedPreferencesStringValue(activity!!, Utils.USER_TOKEN, "LYA $res")
                     fragmentHandler.add(HomeFragment.getInstance())
                 }
             }

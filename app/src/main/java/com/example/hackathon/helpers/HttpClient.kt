@@ -44,9 +44,18 @@ open class HttpClient {
             executeRequest(request, activity, callback, loading)
         }
 
+        fun createThing(path : String, activity : Activity, loading: Boolean, callback : (err: Boolean, response: String) -> Unit) {
+            val request = Request.Builder()
+                .header("authorization", Utils.getSharedPreferencesStringValue(activity, Utils.USER_TOKEN)!!)
+                .url(API_URL + path)
+                .post(RequestBody.create(null, ""))
+                .build()
+            executeRequest(request, activity, callback, loading)
+        }
+
         fun get(path : String, activity : Activity, loading: Boolean, callback : (err: Boolean, response : String) -> Unit) {
             val request = Request.Builder()
-                    .header("Authorization", Utils.getSharedPreferencesStringValue(activity, "USER_TOKEN")!!)
+                    .header("authorization", Utils.getSharedPreferencesStringValue(activity, Utils.USER_TOKEN)!!)
                     .url(API_URL + path)
                     .build()
             executeRequest(request, activity, callback, loading)
@@ -55,42 +64,42 @@ open class HttpClient {
         fun post(path : String, activity : Activity, json : String, loading: Boolean, callback : (err: Boolean, response: String) -> Unit) {
             val jsonBody = RequestBody.create(JSON, json)
             val request = Request.Builder()
-                    .header("Authorization", Utils.getSharedPreferencesStringValue(activity, "USER_TOKEN")!!)
+                    .header("authorization", Utils.getSharedPreferencesStringValue(activity, Utils.USER_TOKEN)!!)
                     .url(API_URL + path)
                     .post(jsonBody)
                     .build()
             executeRequest(request, activity, callback, loading)
         }
 
-        fun put(path : String, activity : Activity, json : String, loading: Boolean, callback : (err: Boolean, response : String) -> Unit) {
-            val jsonBody = RequestBody.create(JSON, json)
-            val request = Request.Builder()
-                    .header("Authorization", Utils.getSharedPreferencesStringValue(activity, "USER_TOKEN")!!)
-                    .url(API_URL + path)
-                    .put(jsonBody)
-                    .build()
-            executeRequest(request, activity, callback, loading)
-        }
-
-        fun delete(path : String, activity : Activity, json : String, loading: Boolean, callback : (err: Boolean, response: String) -> Unit) {
-            val jsonBody = RequestBody.create(JSON, json)
-            val request = Request.Builder()
-                    .header("Authorization", Utils.getSharedPreferencesStringValue(activity, "USER_TOKEN")!!)
-                    .url(API_URL + path)
-                    .delete(jsonBody)
-                    .build()
-            executeRequest(request, activity, callback, loading)
-        }
-
-
-        fun upload(path : String, activity : Activity, multipartBody : MultipartBody, loading: Boolean, callback : (err: Boolean, response : String) -> Unit) {
-            val request = Request.Builder()
-                    .url(API_URL + path)
-                    .header("Authorization", Utils.getSharedPreferencesStringValue(activity, "USER_TOKEN")!!)
-                    .post(multipartBody)
-                    .build()
-            executeRequest(request, activity, callback, loading)
-        }
+//        fun put(path : String, activity : Activity, json : String, loading: Boolean, callback : (err: Boolean, response : String) -> Unit) {
+//            val jsonBody = RequestBody.create(JSON, json)
+//            val request = Request.Builder()
+//                    .header("Authorization", Utils.getSharedPreferencesStringValue(activity, Utils.USER_TOKEN)!!)
+//                    .url(API_URL + path)
+//                    .put(jsonBody)
+//                    .build()
+//            executeRequest(request, activity, callback, loading)
+//        }
+//
+//        fun delete(path : String, activity : Activity, json : String, loading: Boolean, callback : (err: Boolean, response: String) -> Unit) {
+//            val jsonBody = RequestBody.create(JSON, json)
+//            val request = Request.Builder()
+//                    .header("Authorization", Utils.getSharedPreferencesStringValue(activity, Utils.USER_TOKEN)!!)
+//                    .url(API_URL + path)
+//                    .delete(jsonBody)
+//                    .build()
+//            executeRequest(request, activity, callback, loading)
+//        }
+//
+//
+//        fun upload(path : String, activity : Activity, multipartBody : MultipartBody, loading: Boolean, callback : (err: Boolean, response : String) -> Unit) {
+//            val request = Request.Builder()
+//                    .url(API_URL + path)
+//                    .header("Authorization", Utils.getSharedPreferencesStringValue(activity, Utils.USER_TOKEN)!!)
+//                    .post(multipartBody)
+//                    .build()
+//            executeRequest(request, activity, callback, loading)
+//        }
 
         private fun executeRequest(request: Request, activity: Activity, callback : (err: Boolean, response : String) -> Unit, loading: Boolean) {
             var progressDialog = Dialog(activity)

@@ -41,7 +41,6 @@
                 android:layout_marginStart="@dimen/card_view_default_indent"
                 android:layout_marginEnd="@dimen/card_view_default_indent"
                 android:text="@string/fragment_home_generate_qr_button"
-                android:layout_marginBottom="@dimen/card_view_login_margin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/qrImageView"
@@ -54,10 +53,46 @@
                 android:layout_marginStart="@dimen/card_view_default_indent"
                 android:layout_marginEnd="@dimen/card_view_default_indent"
                 android:text="Read cat QR"
-                android:layout_marginBottom="@dimen/card_view_login_margin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/generateQRButton"
+                app:layout_constraintBottom_toTopOf="@id/createThingButton" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/createThingButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/card_view_default_indent"
+                android:layout_marginEnd="@dimen/card_view_default_indent"
+                android:text="Create thing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/readQRButton"
+                app:layout_constraintBottom_toTopOf="@id/createCredentialsButton" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/createCredentialsButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/card_view_default_indent"
+                android:layout_marginEnd="@dimen/card_view_default_indent"
+                android:text="Create credentials"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/createThingButton"
+                app:layout_constraintBottom_toTopOf="@id/connectButton" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/connectButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/card_view_default_indent"
+                android:layout_marginEnd="@dimen/card_view_default_indent"
+                android:text="Connect"
+                android:layout_marginBottom="64dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/createCredentialsButton"
                 app:layout_constraintBottom_toBottomOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -8,7 +8,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.hackathon"
-        minSdkVersion 23
+        minSdkVersion 26
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -52,4 +52,17 @@ dependencies {
     implementation('me.dm7.barcodescanner:zxing:1.9.8') {
         exclude group: 'com.android.support'
     }
+
+    implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.0'
+    implementation 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.0'
+    implementation group: 'org.msgpack', name: 'msgpack-core', version: '0.8.12'
+    implementation group: 'org.msgpack', name: 'jackson-dataformat-msgpack', version: '0.8.12'
+
+//    implementation 'com.madgag.spongycastle:core:1.54.0.0'
+//    implementation 'com.madgag.spongycastle:prov:1.54.0.0'
+//    implementation 'com.madgag.spongycastle:pkix:1.54.0.0'
+//    implementation 'com.madgag.spongycastle:pg:1.54.0.0'
+
+    implementation 'com.madgag:scprov-jdk15:1.46.99.3-UNOFFICIAL-ROBERTO-RELEASE'
+//    implementation 'com.madgag:scprov-jdk15on:1.47.0.2'
 }
