@@ -1,21 +1,20 @@
 package com.example.hackathon.fragments
 
 import android.Manifest
-import android.content.Context
-import android.content.ContextWrapper
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -25,7 +24,7 @@ import com.example.hackathon.ScanActivity
 import com.example.hackathon.helpers.FragmentHandler
 import com.example.hackathon.helpers.HttpClient
 import com.example.hackathon.helpers.Utils
-import com.example.hackathon.lib.MQQTClient
+import com.example.hackathon.lib.MQTTClient
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
@@ -33,7 +32,6 @@ import com.google.zxing.common.BitMatrix
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.json.JSONObject
 import java.io.*
-import java.lang.ref.WeakReference
 import java.util.*
 
 
@@ -48,6 +46,8 @@ class HomeFragment : Fragment() {
         private val REQUEST_CODE = 1234
     }
 
+    private lateinit var mqttClient: MQTTClient
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -59,7 +59,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val mqqtClient = MQQTClient(activity!!.applicationContext, activity!!)
+        mqttClient = MQTTClient(activity!!.applicationContext, activity!!)
         val fragmentHandler = FragmentHandler(activity!! as AppCompatActivity, R.id.main_fragment_container)
 
         logoutButton.setOnClickListener {
@@ -70,15 +70,19 @@ class HomeFragment : Fragment() {
         generateQRButton.setOnClickListener {
             HttpClient.getCatFat("https://catfact.ninja/facts?limit=1", activity!!, true) { err, res ->
                 activity!!.runOnUiThread {
-                    val resJson = JSONObject(res)
-                    val data = JSONObject(resJson.getJSONArray("data")[0].toString())
-                    try {
-                        val bitmap = TextToImageEncode(data.get("fact").toString())
-                        qrImageView!!.setImageBitmap(bitmap)
-                        val uri = saveImageToExternalStorage(bitmap!!)
-                        Toast.makeText(activity!!, "QRCode saved to -> $uri", Toast.LENGTH_SHORT).show()
-                    } catch (e: WriterException) {
-                        e.printStackTrace()
+                    if (err) {
+                        Toast.makeText(activity!!, JSONObject(res).get("message").toString(), Toast.LENGTH_SHORT).show()
+                    } else {
+                        val resJson = JSONObject(res)
+                        val data = JSONObject(resJson.getJSONArray("data")[0].toString())
+                        try {
+                            val bitmap = textToImageEncode(data.get("fact").toString())
+                            qrImageView!!.setImageBitmap(bitmap)
+                            val uri = saveImageToExternalStorage(bitmap!!)
+                            Toast.makeText(activity!!, "QRCode saved to -> $uri", Toast.LENGTH_SHORT).show()
+                        } catch (e: WriterException) {
+                            e.printStackTrace()
+                        }
                     }
                 }
             }
@@ -107,6 +111,14 @@ class HomeFragment : Fragment() {
                     }
                 }
             }
+        }
+
+        sendMessageButton.setOnClickListener {
+            showSendMessageDialog()
+        }
+
+        subscribeButton.setOnClickListener {
+            subscribeDialog()
         }
 
         connectButton.setOnClickListener {
@@ -153,19 +165,21 @@ class HomeFragment : Fragment() {
                                     "-----END CERTIFICATE-----\n")
                         }
 
-                        mqqtClient.connect(caCrtFile.path, crt.path, privateKey.path) { topic, message ->
-                            Toast.makeText(activity!!, message.toString(), Toast.LENGTH_SHORT).show()
+                        mqttClient.connect(caCrtFile.path, crt.path, privateKey.path) { topic, message ->
+                            Toast.makeText(activity!!, "Topic: $topic -> $message", Toast.LENGTH_SHORT).show()
                         }
+                        sendMessageButton.show()
+                        subscribeButton.show()
                     }
                 }
             }
         }
     }
 
-    private fun getTempFile(context: Context, url: String): File? =
-        Uri.parse(url)?.lastPathSegment?.let { filename ->
-            File.createTempFile(filename, null, context.cacheDir)
-        }
+//    private fun getTempFile(context: Context, url: String): File? =
+//        Uri.parse(url)?.lastPathSegment?.let { filename ->
+//            File.createTempFile(filename, null, context.cacheDir)
+//        }
 
     // Method to save an image to external storage
     private fun saveImageToExternalStorage(bitmap: Bitmap): Uri {
@@ -200,7 +214,7 @@ class HomeFragment : Fragment() {
     }
 
     @Throws(WriterException::class)
-    private fun TextToImageEncode(Value: String): Bitmap? {
+    private fun textToImageEncode(Value: String): Bitmap? {
         val bitMatrix: BitMatrix
         try {
             bitMatrix = MultiFormatWriter().encode(
@@ -222,19 +236,77 @@ class HomeFragment : Fragment() {
 
         for (y in 0 until bitMatrixHeight) {
             val offset = y * bitMatrixWidth
-
             for (x in 0 until bitMatrixWidth) {
 
                 pixels[offset + x] = if (bitMatrix.get(x, y))
-                    resources.getColor(R.color.black)
+                    ContextCompat.getColor(activity!!, R.color.black)
                 else
-                    resources.getColor(R.color.white)
+                    ContextCompat.getColor(activity!!, R.color.white)
             }
         }
         val bitmap = Bitmap.createBitmap(bitMatrixWidth, bitMatrixHeight, Bitmap.Config.ARGB_4444)
 
         bitmap.setPixels(pixels, 0, 500, 0, 0, bitMatrixWidth, bitMatrixHeight)
         return bitmap
+    }
+
+    private fun showSendMessageDialog() {
+        val builder = AlertDialog.Builder(activity!!)
+        val dialogView = LayoutInflater.from(context!!).inflate(R.layout.send_message, null)
+        builder.setView(dialogView)
+//        builder.setTitle(activity!!.getString(R.string.fragment_home_send_message_dialog_title))
+//        builder.setMessage(activity!!.getString(R.string.fragment_home_menu_reset_data_dialog_text))
+
+        val dialogClickListener = DialogInterface.OnClickListener{ _, which ->
+            when(which) {
+                DialogInterface.BUTTON_POSITIVE -> {
+                    val message = dialogView.findViewById<com.google.android.material.textfield.TextInputLayout>(R.id.dialogMessageEditText).editText!!.text
+                    if (!message.isNullOrBlank()) {
+                        mqttClient.publishMessage("test", message.toString())
+                        Toast.makeText(activity!!, "Message sent!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(activity!!, "Error: Empty message", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+
+        builder.setPositiveButton(activity!!.getString(R.string.fragment_home_send_message_positive_button), dialogClickListener)
+        builder.setNegativeButton(activity!!.getString(R.string.fragment_home_send_message_negative_button), dialogClickListener)
+//        builder.setNeutralButton(activity!!.getString(R.string.fragment_home_menu_reset_data_dialog_cancel), dialogClickListener)
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+    private fun subscribeDialog() {
+        val builder = AlertDialog.Builder(activity!!)
+        val dialogView = LayoutInflater.from(context!!).inflate(R.layout.send_message, null)
+        builder.setView(dialogView)
+
+        dialogView.findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.dialogMessageTextView).text = "Type your topic: "
+
+//        builder.setTitle(activity!!.getString(R.string.fragment_home_send_message_dialog_title))
+//        builder.setMessage(activity!!.getString(R.string.fragment_home_menu_reset_data_dialog_text))
+
+        val dialogClickListener = DialogInterface.OnClickListener{ _, which ->
+            when(which) {
+                DialogInterface.BUTTON_POSITIVE -> {
+                    val topic = dialogView.findViewById<com.google.android.material.textfield.TextInputLayout>(R.id.dialogMessageEditText).editText!!.text
+                    if (!topic.isNullOrBlank()) {
+                        mqttClient.subscribeTopic(topic.toString())
+                        Toast.makeText(activity!!, "subscribed !", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(activity!!, "Error: Empty topic", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+
+        builder.setPositiveButton(activity!!.getString(R.string.fragment_home_send_message_positive_button), dialogClickListener)
+        builder.setNegativeButton(activity!!.getString(R.string.fragment_home_send_message_negative_button), dialogClickListener)
+//        builder.setNeutralButton(activity!!.getString(R.string.fragment_home_menu_reset_data_dialog_cancel), dialogClickListener)
+        val dialog = builder.create()
+        dialog.show()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {

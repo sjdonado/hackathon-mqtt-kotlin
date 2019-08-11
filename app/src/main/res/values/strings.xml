@@ -21,6 +21,12 @@
     <!-- Home Fragment -->
     <string name="fragment_home_generate_qr_button">Generate cat QR</string>
 
+    <!-- Send message Dialog -->
+    <string name="fragment_home_send_message_dialog_title">Send message</string>
+    <string name="fragment_home_send_message_positive_button">Send</string>
+    <string name="fragment_home_send_message_negative_button">Cancel</string>
+
+
     <string name="fragment_sign_up_first_name_error">Empty first name</string>
     <string name="fragment_sign_up_last_name_error">Empty last name</string>
     <string name="fragment_sign_up_email_error">Empty email</string>
